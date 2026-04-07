@@ -4,7 +4,7 @@ import Nav from "./components/nav/page";
 import Footer from "./components/footer/page";
 
 export const metadata: Metadata = {
-	title: "Patternnlty",
+	title: "Patternly",
 	description: "Crea y comparte patrones de diseño con la comunidad",
 };
 
