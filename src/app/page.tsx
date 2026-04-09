@@ -1,4 +1,5 @@
 import { css } from "../../styled-system/css";
+import Image from "next/image";
 //className={css({})}
 export default function Home() {
 	return (
@@ -102,7 +103,96 @@ export default function Home() {
 					</button>
 				</div>
 			</section>
-			<section></section>
+			<section
+				className={css({
+					width: "100%",
+					borderTop: "1px solid",
+					borderBottom: "1px solid",
+					borderColor: "#EEE5E3",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				})}
+			>
+				<div
+					className={css({
+						width: {
+							base: "400px",
+							md: "700px",
+						},
+						backgroundColor: "#FAF8F8",
+						borderRadius: "10px",
+						margin: "40px",
+						padding: "20px",
+						display: "flex",
+						gap: "4",
+						flexDirection: {
+							base: "row",
+							md: "row",
+						},
+						alignItems: "center",
+						justifyContent: "center",
+					})}
+				>
+					<div>
+						<h2
+							className={css({
+								fontFamily: "fraunces",
+								fontSize: {
+									base: "20",
+									md: "30",
+								},
+
+								width: {
+									base: "200px",
+									md: "300px",
+								},
+								textAlign: "inherit",
+							})}
+						>
+							Ajusta talla, cuello, mangas...y
+							<span
+								className={css({
+									fontFamily: "fraunces",
+									fontStyle: "italic",
+									fontWeight: "400",
+									color: "#E6322B",
+									fontSize: {
+										base: "20",
+										md: "30",
+									},
+									width: "300px",
+								})}
+							>
+								{" "}
+								miralo{" "}
+							</span>
+							en tiempo real
+						</h2>{" "}
+						<p
+							className={css({
+								fontFamily: "dmSans",
+								marginTop: "10px",
+								fontWeight: "400",
+
+								fontSize: "12",
+								width: "250px",
+							})}
+						>
+							Cada cambio se refleja al instante. Sin sorpresas
+							cuando empieces a tejer.
+						</p>
+					</div>
+					<div>
+						<Image
+							src="/logo-mobile.svg"
+							alt="Gift"
+							width={200}
+							height={200}
+						/>
+					</div>
+				</div>
+			</section>
 		</div>
 	);
 }
