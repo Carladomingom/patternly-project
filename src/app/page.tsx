@@ -57,6 +57,7 @@ export default function Home() {
 							md: "400px",
 						},
 						marginTop: "10px",
+						fontWeight: "300",
 					})}
 				>
 					Crea patrones de crochet personalizados en segundos. Elige
@@ -172,7 +173,7 @@ export default function Home() {
 							className={css({
 								fontFamily: "dmSans",
 								marginTop: "10px",
-								fontWeight: "400",
+								fontWeight: "300",
 
 								fontSize: "12",
 								width: "250px",
@@ -301,6 +302,9 @@ export default function Home() {
 					flexDirection: "column",
 					backgroundColor: "#FAF8F8",
 					width: "100%",
+
+					alignItems: "center",
+					justifyContent: "center",
 				})}
 			>
 				<h2
@@ -308,7 +312,7 @@ export default function Home() {
 						fontFamily: "fraunces",
 						marginTop: "10px",
 						fontWeight: "400",
-						width: "300px",
+						width: "400px",
 						fontSize: {
 							base: "20",
 							md: "30",
@@ -333,6 +337,149 @@ export default function Home() {
 				>
 					Ver más patrones
 				</button>
+			</section>
+			<section
+				className={css({
+					padding: "40px",
+					margin: "40px",
+					width: "100%",
+					display: "flex",
+					gap: "10",
+					flexDirection: "column",
+					alignItems: "center",
+					justifyContent: "center",
+				})}
+			>
+				<div
+					className={css({
+						border: "1px solid #EDE5E3",
+						borderLeft: "4px solid #E03020",
+						borderRadius: "20px",
+						padding: "56px",
+						display: "flex",
+						alignItems: "center",
+						gap: "10",
+						backgroundColor: "#FFFFFF",
+						flexDirection: {
+							base: "column",
+							md: "row",
+						},
+					})}
+				>
+					<div
+						className={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "3",
+							flex: "1",
+						})}
+					>
+						<p
+							className={css({
+								fontSize: "12px",
+								fontFamily: "dmSans",
+								fontWeight: "500",
+								letterSpacing: "0.1em",
+								textTransform: "uppercase",
+								color: "#E03020",
+								display: "flex",
+								alignItems: "center",
+								gap: "8px",
+								_before: {
+									content: '""',
+									display: "block",
+									width: "20px",
+									height: "1.5px",
+									backgroundColor: "#E03020",
+								},
+							})}
+						>
+							Newsletter
+						</p>
+
+						<h2
+							className={css({
+								fontFamily: "fraunces",
+								fontWeight: "400",
+								fontSize: {
+									base: "22px",
+									md: "32px",
+								},
+								color: "#1A0A08",
+								lineHeight: "1.2",
+							})}
+						>
+							Recibe novedades de crochet
+						</h2>
+
+						{/* Descripción */}
+						<p
+							className={css({
+								fontFamily: "dmSans",
+								fontSize: "14px",
+								fontWeight: "300",
+								color: "#000000",
+							})}
+						>
+							Patrones nuevos, tutoriales y tendencias directas a
+							tu correo. Sin spam.
+						</p>
+					</div>
+
+					<div
+						className={css({
+							display: "flex",
+							flexDirection: "column",
+							gap: "2",
+							flex: "1",
+							width: {
+								base: "100%",
+								md: "auto",
+							},
+						})}
+					>
+						<input
+							type="email"
+							placeholder="Introduce tu email"
+							className={css({
+								backgroundColor: "#FAF8F8",
+								border: "1px solid #EDE5E3",
+								borderRadius: "8px",
+								padding: "12px 16px",
+								fontSize: "14px",
+								fontFamily: "dmSans",
+								color: "#1A0A08",
+								outline: "none",
+								width: "100%",
+								_placeholder: {
+									color: "#AA8880",
+								},
+								_focus: {
+									borderColor: "#E03020",
+								},
+							})}
+						/>
+						<button
+							className={css({
+								backgroundColor: "#E03020",
+								color: "#FFFFFF",
+								padding: "12px 24px",
+								borderRadius: "8px",
+								fontSize: "14px",
+								fontWeight: "500",
+								fontFamily: "dmSans",
+								border: "none",
+								cursor: "pointer",
+								width: "100%",
+								_hover: {
+									backgroundColor: "#A01808",
+								},
+							})}
+						>
+							Suscribirse
+						</button>
+					</div>
+				</div>
 			</section>
 		</div>
 	);
