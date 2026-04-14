@@ -98,7 +98,7 @@ export default function Login() {
 				>
 					¿Has olvidado la contraseña?
 					<Link
-						href="/recuperar-contraseña"
+						href="/recuperar-contrasena"
 						className={css({
 							fontSize: "8px",
 							color: "#1A0A08",

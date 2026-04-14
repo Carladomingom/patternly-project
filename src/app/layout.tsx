@@ -16,7 +16,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body>
-				<Nav isLogged={true} />
+				<Nav isLogged={false} />
 				{children}
 				<Footer />
 			</body>
