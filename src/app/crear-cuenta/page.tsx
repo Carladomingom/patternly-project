@@ -2,7 +2,7 @@ import { css } from "../../../styled-system/css";
 import Link from "next/link";
 
 //className={css({})}
-export default function Login() {
+export default function CrearCuenta() {
 	return (
 		<div
 			className={css({
@@ -37,8 +37,32 @@ export default function Login() {
 						fontSize: "20",
 					})}
 				>
-					Iniciar Sesión
+					Regístrate
 				</h2>
+				<input
+					type="name"
+					placeholder="Nombre de usuario"
+					className={css({
+						backgroundColor: "#FAF8F8",
+						border: "1px solid #EDE5E3",
+						borderRadius: "8px",
+						padding: "12px 16px",
+						fontSize: "14px",
+						fontFamily: "dmSans",
+						color: "#1A0A08",
+						outline: "none",
+						width: {
+							base: "300px",
+							md: "500px",
+						},
+						_placeholder: {
+							color: "#AA8880",
+						},
+						_focus: {
+							borderColor: "#E03020",
+						},
+					})}
+				></input>
 				<input
 					type="email"
 					placeholder="Correo electrónico"
@@ -87,31 +111,7 @@ export default function Login() {
 						},
 					})}
 				></input>
-				<p
-					className={css({
-						fontSize: "8px",
-						color: "#1A0A08",
-						textAlign: "center",
-						width: "100%",
-						fontFamily: "dmSans",
-					})}
-				>
-					¿Has olvidado la contraseña?
-					<Link
-						href="/recuperar-contrasena"
-						className={css({
-							fontSize: "8px",
-							color: "#1A0A08",
-							fontWeight: "700",
-							textAlign: "center",
-							width: "100%",
-							fontFamily: "dmSans",
-						})}
-					>
-						{" "}
-						Recuperar contraseña
-					</Link>
-				</p>
+
 				<button
 					className={css({
 						backgroundColor: "#E6322B",
@@ -124,38 +124,9 @@ export default function Login() {
 						marginTop: "20px",
 					})}
 				>
-					Acceder
+					Enviar
 				</button>
 			</div>
-			<p
-				className={css({
-					fontSize: "10px",
-					color: "#1A0A08",
-					textAlign: "center",
-					width: "100%",
-					fontFamily: "dmSans",
-					margin: "20px 0",
-				})}
-			>
-				¿Aún no te has registrado?{" "}
-				<Link
-					href="/crear-cuenta"
-					className={css({
-						fontSize: "10px",
-						color: "#1A0A08",
-						fontWeight: "700",
-						textAlign: "center",
-						width: "100%",
-						fontFamily: "dmSans",
-						display: {
-							base: "block",
-							md: "inline",
-						},
-					})}
-				>
-					Regístrate aqui
-				</Link>
-			</p>
 			<div
 				className={css({
 					backgroundColor: "#F8BDBE",
@@ -170,7 +141,23 @@ export default function Login() {
 					width: "300px",
 				})}
 			>
-				<p>Correo electrónico o contraseña incorrectos</p>
+				<p>Correo electrónico no valido</p>
+			</div>
+			<div
+				className={css({
+					backgroundColor: "#F8BDBE",
+
+					borderRadius: "8px",
+					padding: "12px 16px",
+					fontSize: "10px",
+					textAlign: "center",
+					fontFamily: "dmSans",
+					color: "#1A0A08",
+					outline: "none",
+					width: "300px",
+				})}
+			>
+				<p>nombre de usuario no disponible</p>
 			</div>
 		</div>
 	);
