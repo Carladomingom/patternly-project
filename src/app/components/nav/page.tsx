@@ -3,7 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { css } from "../../../../styled-system/css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 type NavbarProps = {
 	isLogged: boolean;
@@ -11,6 +13,24 @@ type NavbarProps = {
 
 export default function Nav({ isLogged }: NavbarProps) {
 	const [open, setOpen] = useState(false);
+	const [logged, setLogged] = useState(isLogged);
+	const router = useRouter();
+	const supabase = createClient();
+
+	useEffect(() => {
+		const { data: listener } = supabase.auth.onAuthStateChange(
+			(_event, session) => {
+				setLogged(!!session?.user);
+			},
+		);
+		return () => listener.subscription.unsubscribe();
+	}, []);
+
+	async function handleLogout() {
+		await supabase.auth.signOut();
+		router.push("/");
+		router.refresh();
+	}
 
 	return (
 		<header
@@ -39,37 +59,76 @@ export default function Nav({ isLogged }: NavbarProps) {
 						<Image
 							src="/logo.svg"
 							alt="Logo"
-							width={140}
-							height={40}
+							width={70}
+							height={70}
 						/>
 					</Link>
-					<div className="gap-8 flex">
+					<div
+						className={css({
+							gap: "8",
+							display: "flex",
+							alignItems: "center",
+							fontFamily: "dmSans",
+							color: "#6F4C42",
+							fontSize: "12",
+							marginRight: "4",
+							fontWeight: "500",
+						})}
+					>
 						<Link href="/comunidad">Comunidad</Link>
 
 						<Link href="/crear-patron">Crear patrón</Link>
-						{isLogged ? (
-							<Link href="/mi-cuenta">
-								<Image
-									src="/login-icon.svg"
-									alt="Login Icon"
-									width={20}
-									height={20}
-								/>
-							</Link>
+
+						{logged ? (
+							<div
+								className={css({
+									display: "flex",
+									alignItems: "center",
+									gap: "4",
+								})}
+							>
+								<Link href="/mi-cuenta">
+									<Image
+										src="/login-icon.svg"
+										alt="Mi cuenta"
+										width={20}
+										height={20}
+									/>
+								</Link>
+								<button
+									onClick={handleLogout}
+									className={css({
+										border: "none",
+										background: "transparent",
+										fontFamily: "dmSans",
+										color: "#6F4C42",
+										fontSize: "12",
+										fontWeight: "500",
+										cursor: "pointer",
+										padding: "0",
+									})}
+								>
+									Cerrar sesión
+								</button>
+							</div>
 						) : (
-							<Link href="/login"> Iniciar Sesión </Link>
+							<Link
+								href="/login"
+								className={css({ color: "#E6322B" })}
+							>
+								Iniciar Sesión
+							</Link>
 						)}
 					</div>
 				</div>
-				{/* Mobile version */}
 
+				{/* Mobile version */}
 				<div
 					className={css({
 						display: {
 							base: "grid",
 							md: "none",
 						},
-
 						gridTemplateColumns: "1fr auto 1fr",
 						alignItems: "center",
 					})}
@@ -109,10 +168,32 @@ export default function Nav({ isLogged }: NavbarProps) {
 							justifySelf: "end",
 						})}
 					>
-						login
+						{logged ? (
+							<Link href="/mi-cuenta">
+								<Image
+									src="/login-icon.svg"
+									alt="Mi cuenta"
+									width={20}
+									height={20}
+								/>
+							</Link>
+						) : (
+							<Link
+								href="/login"
+								className={css({
+									fontFamily: "dmSans",
+									color: "#E6322B",
+									fontSize: "12",
+									fontWeight: "500",
+								})}
+							>
+								Iniciar Sesión
+							</Link>
+						)}
 					</div>
 				</div>
 
+				{/* Mobile menu desplegable */}
 				{open && (
 					<div
 						className={css({
@@ -120,15 +201,43 @@ export default function Nav({ isLogged }: NavbarProps) {
 								base: "flex",
 								md: "none",
 							},
-
 							flexDirection: "column",
 							gap: "4",
 							mt: "4",
 						})}
 					>
-						<Link href="/comunidad">Comunidad</Link>
+						<Link href="/comunidad" onClick={() => setOpen(false)}>
+							Comunidad
+						</Link>
 
-						<Link href="/crear-patron">Crear patrón</Link>
+						<Link
+							href="/crear-patron"
+							onClick={() => setOpen(false)}
+						>
+							Crear patrón
+						</Link>
+
+						{logged && (
+							<button
+								onClick={() => {
+									setOpen(false);
+									handleLogout();
+								}}
+								className={css({
+									border: "none",
+									background: "transparent",
+									fontFamily: "dmSans",
+									color: "#E6322B",
+									fontSize: "12",
+									fontWeight: "500",
+									cursor: "pointer",
+									textAlign: "left",
+									padding: "0",
+								})}
+							>
+								Cerrar sesión
+							</button>
+						)}
 					</div>
 				)}
 			</nav>
