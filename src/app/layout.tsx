@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "./components/nav/page";
 import Footer from "./components/footer/page";
+import { css } from "../../styled-system/css";
 
 export const metadata: Metadata = {
 	title: "Patternly",
@@ -15,9 +16,21 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body>
+			<body
+				className={css({
+					display: "flex",
+					flexDirection: "column",
+					minHeight: "100vh",
+				})}
+			>
 				<Nav isLogged={false} />
-				{children}
+				<main
+					className={css({
+						flex: "1",
+					})}
+				>
+					{children}
+				</main>
 				<Footer />
 			</body>
 		</html>
