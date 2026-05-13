@@ -5,7 +5,7 @@ import { PatronClient } from "./PatronClient";
 import type { Pattern } from "@/types";
 
 type Props = {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 };
 
 async function getPattern(id: string) {
@@ -32,18 +32,19 @@ async function isFavorite(userId: string, patternId: string) {
 }
 
 export default async function PatronPage({ params }: Props) {
+	const { id } = await params;
 	const supabase = await createClient();
 	const {
 		data: { user },
 	} = await supabase.auth.getUser();
 
 	if (!user) {
-		redirect(`/login?redirect=/patron/${params.id}`);
+		redirect(`/login?redirect=/patron/${id}`);
 	}
 
 	const [pattern, liked] = await Promise.all([
-		getPattern(params.id),
-		isFavorite(user.id, params.id),
+		getPattern(id),
+		isFavorite(user.id, id),
 	]);
 
 	if (!pattern || (!pattern.is_public && pattern.user_id !== user.id)) {
