@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { css } from "../../../styled-system/css";
+import { css } from "../../../../styled-system/css";
 import { createClient } from "@/lib/supabase/client";
 import type { Pattern, Material, Step } from "@/types";
 
