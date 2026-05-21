@@ -49,17 +49,183 @@ export function PatronClient({ pattern, initialLiked, isOwner }: Props) {
 	async function handleDownload() {
 		setDownloading(true);
 		try {
-			const res = await fetch(`/api/patron/${pattern.id}/pdf`);
-			if (!res.ok) throw new Error();
-			const blob = await res.blob();
-			const url = URL.createObjectURL(blob);
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = `${pattern.title.replace(/\s+/g, "-")}.pdf`;
-			a.click();
-			URL.revokeObjectURL(url);
-		} catch {
-			alert("Ha ocurrido un error al descargar el patrón.");
+			const { jsPDF } = await import("jspdf");
+			const doc = new jsPDF({ unit: "mm", format: "a4" });
+
+			const materials = pattern.materials as Material[];
+			const steps = pattern.steps as Step[];
+
+			const margin = 20;
+			const pageWidth = doc.internal.pageSize.getWidth();
+			const maxWidth = pageWidth - margin * 2;
+			let y = margin;
+
+			function checkPage(needed = 10) {
+				if (y + needed > doc.internal.pageSize.getHeight() - margin) {
+					doc.addPage();
+					y = margin;
+				}
+			}
+
+			function addText(
+				text: string,
+				size: number,
+				style: "normal" | "bold" = "normal",
+				color: [number, number, number] = [26, 10, 8],
+			) {
+				doc.setFontSize(size);
+				doc.setFont("helvetica", style);
+				doc.setTextColor(...color);
+				const lines = doc.splitTextToSize(text, maxWidth) as string[];
+				checkPage(lines.length * (size * 0.4) + 4);
+				doc.text(lines, margin, y);
+				y += lines.length * (size * 0.4) + 4;
+			}
+
+			function addDivider() {
+				checkPage(8);
+				doc.setDrawColor(237, 229, 227);
+				doc.setLineWidth(0.3);
+				doc.line(margin, y, pageWidth - margin, y);
+				y += 6;
+			}
+
+			y = margin;
+
+			doc.setFontSize(13);
+			doc.setFont("helvetica", "bold");
+			doc.setTextColor(224, 48, 32);
+			doc.text("Patternly", margin, y);
+
+			doc.setFontSize(9);
+			doc.setFont("helvetica", "normal");
+			doc.setTextColor(170, 136, 128);
+			doc.text(
+				`Generado el ${new Date().toLocaleDateString("es-ES")}`,
+				pageWidth - margin,
+				y,
+				{ align: "right" },
+			);
+			y += 5;
+
+			doc.setDrawColor(237, 229, 227);
+			doc.setLineWidth(0.4);
+			doc.line(margin, y, pageWidth - margin, y);
+			y += 10;
+
+			doc.setFontSize(22);
+			doc.setFont("helvetica", "bolditalic");
+			doc.setTextColor(26, 10, 8);
+			const titleLines = doc.splitTextToSize(
+				pattern.title,
+				maxWidth,
+			) as string[];
+			doc.text(titleLines, margin, y);
+			y += titleLines.length * 9 + 2;
+
+			doc.setFontSize(10);
+			doc.setFont("helvetica", "normal");
+			doc.setTextColor(102, 68, 56);
+			doc.text(`por @${pattern.profiles.username}`, margin, y);
+			y += 12;
+
+			addDivider();
+
+			addText("CARACTERÍSTICAS", 9, "bold", [170, 136, 128]);
+			y += 2;
+
+			const chars = [
+				["Talla", pattern.size.toUpperCase()],
+				["Cuello", pattern.neck],
+				["Mangas", pattern.sleeves],
+				["Tipo de punto", pattern.stitch.replace("_", " ")],
+				["Grosor de hilo", pattern.yarn_weight],
+				["Silueta", pattern.fit],
+			];
+
+			chars.forEach(([label, value]) => {
+				checkPage(7);
+				doc.setFontSize(10);
+				doc.setFont("helvetica", "bold");
+				doc.setTextColor(26, 10, 8);
+				doc.text(`${label}:`, margin, y);
+				doc.setFont("helvetica", "normal");
+				doc.setTextColor(102, 68, 56);
+				doc.text(value, margin + 40, y);
+				y += 6;
+			});
+
+			y += 4;
+			addDivider();
+
+			addText("MATERIALES", 9, "bold", [170, 136, 128]);
+			y += 2;
+
+			materials.forEach((mat) => {
+				checkPage(7);
+				doc.setFontSize(10);
+				doc.setFont("helvetica", "normal");
+				doc.setTextColor(26, 10, 8);
+				doc.text(`• ${mat.name}:`, margin, y);
+				doc.setTextColor(102, 68, 56);
+				doc.text(`${mat.quantity} ${mat.unit}`, margin + 45, y);
+				y += 6;
+			});
+
+			y += 4;
+			addDivider();
+
+			addText("PASO A PASO", 9, "bold", [170, 136, 128]);
+			y += 2;
+
+			steps.forEach((step) => {
+				checkPage(14);
+
+				doc.setFontSize(11);
+				doc.setFont("helvetica", "bold");
+				doc.setTextColor(224, 48, 32);
+				doc.text(`${step.order}.`, margin, y);
+
+				doc.setFontSize(10);
+				doc.setFont("helvetica", "normal");
+				doc.setTextColor(26, 10, 8);
+				const stepLines = doc.splitTextToSize(
+					step.description,
+					maxWidth - 8,
+				) as string[];
+				doc.text(stepLines, margin + 8, y);
+				y += stepLines.length * 5 + 6;
+			});
+
+			y += 4;
+			addDivider();
+
+			const totalPages = doc.getNumberOfPages();
+			for (let i = 1; i <= totalPages; i++) {
+				doc.setPage(i);
+				const pageH = doc.internal.pageSize.getHeight();
+				doc.setFillColor(250, 248, 248);
+				doc.rect(0, pageH - 10, pageWidth, 10, "F");
+				doc.setFontSize(8);
+				doc.setFont("helvetica", "normal");
+				doc.setTextColor(170, 136, 128);
+				doc.text(
+					"Patternly © " + new Date().getFullYear(),
+					margin,
+					pageH - 3,
+				);
+				doc.text(
+					`Página ${i} de ${totalPages}`,
+					pageWidth - margin,
+					pageH - 3,
+					{ align: "right" },
+				);
+			}
+
+			doc.save(`${pattern.title.replace(/\s+/g, "-")}.pdf`);
+		} catch (e) {
+			console.error(e);
+			alert("Ha ocurrido un error al generar el PDF.");
 		} finally {
 			setDownloading(false);
 		}
@@ -107,46 +273,47 @@ export function PatronClient({ pattern, initialLiked, isOwner }: Props) {
 							gap: "4",
 						})}
 					>
-						<div>
-							<p className={LABEL}>Talla</p>
-							<p className={VALUE}>
-								{pattern.size.toUpperCase()}
-							</p>
-						</div>
-						<div>
-							<p className={LABEL}>Cuello</p>
-							<p className={VALUE}>
-								{pattern.neck.charAt(0).toUpperCase() +
-									pattern.neck.slice(1)}
-							</p>
-						</div>
-						<div>
-							<p className={LABEL}>Mangas</p>
-							<p className={VALUE}>
-								{pattern.sleeves.charAt(0).toUpperCase() +
-									pattern.sleeves.slice(1)}
-							</p>
-						</div>
-						<div>
-							<p className={LABEL}>Tipo de punto</p>
-							<p className={VALUE}>
-								{pattern.stitch.replace("_", " ")}
-							</p>
-						</div>
-						<div>
-							<p className={LABEL}>Grosor de hilo</p>
-							<p className={VALUE}>
-								{pattern.yarn_weight.charAt(0).toUpperCase() +
-									pattern.yarn_weight.slice(1)}
-							</p>
-						</div>
-						<div>
-							<p className={LABEL}>Silueta</p>
-							<p className={VALUE}>
-								{pattern.fit.charAt(0).toUpperCase() +
-									pattern.fit.slice(1)}
-							</p>
-						</div>
+						{[
+							{
+								label: "Talla",
+								value: pattern.size.toUpperCase(),
+							},
+							{
+								label: "Cuello",
+								value:
+									pattern.neck.charAt(0).toUpperCase() +
+									pattern.neck.slice(1),
+							},
+							{
+								label: "Mangas",
+								value:
+									pattern.sleeves.charAt(0).toUpperCase() +
+									pattern.sleeves.slice(1),
+							},
+							{
+								label: "Tipo de punto",
+								value: pattern.stitch.replace("_", " "),
+							},
+							{
+								label: "Grosor de hilo",
+								value:
+									pattern.yarn_weight
+										.charAt(0)
+										.toUpperCase() +
+									pattern.yarn_weight.slice(1),
+							},
+							{
+								label: "Silueta",
+								value:
+									pattern.fit.charAt(0).toUpperCase() +
+									pattern.fit.slice(1),
+							},
+						].map(({ label, value }) => (
+							<div key={label}>
+								<p className={LABEL}>{label}</p>
+								<p className={VALUE}>{value}</p>
+							</div>
+						))}
 					</div>
 				</div>
 
