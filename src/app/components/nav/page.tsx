@@ -17,7 +17,7 @@ export default function Nav({ isLogged }: NavbarProps) {
 			className={css({
 				width: "100%",
 				borderBottom: "1px solid",
-				borderColor: "gray.200",
+				borderColor: "#EEE5E3",
 				px: "6",
 				py: "4",
 			})}
@@ -45,8 +45,8 @@ export default function Nav({ isLogged }: NavbarProps) {
 						<Image
 							src="/logo.svg"
 							alt="Logo"
-							width={70}
-							height={70}
+							width={90}
+							height={90}
 						/>
 					</Link>
 					<div

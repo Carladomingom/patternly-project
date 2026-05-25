@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Nav from "./components/nav/page";
+import Footer from "./components/footer/page";
 
 export const metadata: Metadata = {
 	title: "Patternnlty",
@@ -17,6 +18,7 @@ export default function RootLayout({
 			<body>
 				<Nav isLogged={true} />
 				{children}
+				<Footer />
 			</body>
 		</html>
 	);
