@@ -134,7 +134,13 @@ export default function Home() {
 						justifyContent: "center",
 					})}
 				>
-					<div>
+					<div
+						className={css({
+							width: {
+								base: "400px",
+							},
+						})}
+					>
 						<h2
 							className={css({
 								fontFamily: "fraunces",
@@ -312,7 +318,10 @@ export default function Home() {
 						fontFamily: "fraunces",
 						marginTop: "10px",
 						fontWeight: "400",
-						width: "400px",
+						width: {
+							base: "250px",
+							md: "400px",
+						},
 						fontSize: {
 							base: "20",
 							md: "30",
@@ -338,24 +347,18 @@ export default function Home() {
 					Ver más patrones
 				</button>
 			</section>
-			<section
-				className={css({
-					padding: "40px",
-					margin: "40px",
-					width: "100%",
-					display: "flex",
-					gap: "10",
-					flexDirection: "column",
-					alignItems: "center",
-					justifyContent: "center",
-				})}
-			>
+			<section>
 				<div
 					className={css({
 						border: "1px solid #EDE5E3",
 						borderLeft: "4px solid #E03020",
 						borderRadius: "20px",
+						margin: {
+							base: "50px",
+							md: "100px",
+						},
 						padding: "56px",
+						justifyContent: "center",
 						display: "flex",
 						alignItems: "center",
 						gap: "10",
@@ -469,11 +472,7 @@ export default function Home() {
 								fontWeight: "500",
 								fontFamily: "dmSans",
 								border: "none",
-								cursor: "pointer",
 								width: "100%",
-								_hover: {
-									backgroundColor: "#A01808",
-								},
 							})}
 						>
 							Suscribirse
