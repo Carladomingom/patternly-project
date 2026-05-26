@@ -38,7 +38,6 @@ export default function Home() {
 						fontStyle: "italic",
 						textAlign: "center",
 						color: "#E6322B",
-						paddingTop: "-10",
 					})}
 				>
 					Teje con confianza.
@@ -192,6 +191,148 @@ export default function Home() {
 						/>
 					</div>
 				</div>
+			</section>
+
+			<section
+				className={css({
+					display: "flex",
+					gap: "10",
+					flexDirection: {
+						base: "column",
+						md: "row",
+					},
+					margin: "40px",
+					alignItems: "center",
+					justifyContent: "center",
+					padding: "40px 20px",
+				})}
+			>
+				<div>
+					<div className={css({ marginBottom: "40px" })}>
+						<Image
+							src="/crochet-icon.svg"
+							alt="crochet"
+							width={100}
+							height={100}
+						/>
+						<p
+							className={css({
+								fontFamily: "dmSans",
+								marginTop: "10px",
+								fontWeight: "400",
+								width: "100px",
+								fontSize: "12",
+								textAlign: "center",
+							})}
+						>
+							Previsualización en tiempo real
+						</p>
+					</div>
+					<div>
+						<Image
+							src="/comunidad-icon.svg"
+							alt="Comunidad icon"
+							width={100}
+							height={100}
+						/>
+						<p
+							className={css({
+								fontFamily: "dmSans",
+								marginTop: "10px",
+								fontWeight: "400",
+								width: "100px",
+								fontSize: "12",
+								textAlign: "center",
+							})}
+						>
+							Comparte con la comunidad
+						</p>
+					</div>
+				</div>
+				<div>
+					<div>
+						<Image
+							src="/pelota-icon.svg"
+							alt="Pelota de lana"
+							width={100}
+							height={100}
+						/>
+						<p
+							className={css({
+								fontFamily: "dmSans",
+								marginTop: "10px",
+								fontWeight: "400",
+								width: "100px",
+								fontSize: "12",
+								marginBottom: "40px",
+								textAlign: "center",
+							})}
+						>
+							Generación automática de patrones
+						</p>
+					</div>
+					<div>
+						<Image
+							src="/guardar-icon.svg"
+							alt="Save icon"
+							width={100}
+							height={100}
+						/>
+						<p
+							className={css({
+								fontFamily: "dmSans",
+								marginTop: "10px",
+								fontWeight: "400",
+								width: "100px",
+								fontSize: "12",
+								textAlign: "center",
+							})}
+						>
+							Guarda y gestiona tus diseños
+						</p>
+					</div>
+				</div>
+			</section>
+			<section
+				className={css({
+					padding: "40px",
+					display: "flex",
+					gap: "10",
+					flexDirection: "column",
+					backgroundColor: "#FAF8F8",
+					width: "100%",
+				})}
+			>
+				<h2
+					className={css({
+						fontFamily: "fraunces",
+						marginTop: "10px",
+						fontWeight: "400",
+						width: "300px",
+						fontSize: {
+							base: "20",
+							md: "30",
+						},
+					})}
+				>
+					Patrones de la Comunidad
+				</h2>
+				{"Aqui iran las cards con los patrones de la comunidad"}
+				<button
+					className={css({
+						backgroundColor: "#FFFFFF",
+						padding: "10px 20px",
+						borderRadius: "5px",
+						color: "#000000",
+						fontFamily: "dmSans",
+						fontSize: "12",
+						border: "1px solid #EEE5E3",
+						width: "150px",
+						alignSelf: "center",
+					})}
+				>
+					Ver más patrones
+				</button>
 			</section>
 		</div>
 	);
