@@ -176,13 +176,7 @@ describe("generateSteps", () => {
 describe("getSvgKey", () => {
 	it("genera la clave en el formato correcto", () => {
 		const key = getSvgKey(BASE_CONFIG);
-		expect(key).toBe("m_redondo_rectas_normal");
-	});
-
-	it("cambia al cambiar la talla", () => {
-		const keyM = getSvgKey({ ...BASE_CONFIG, size: "m" });
-		const keyL = getSvgKey({ ...BASE_CONFIG, size: "l" });
-		expect(keyM).not.toBe(keyL);
+		expect(key).toBe("redondo_rectas_normal");
 	});
 
 	it("cambia al cambiar el cuello", () => {
@@ -213,33 +207,31 @@ describe("getSvgKey", () => {
 
 	it("contiene exactamente 3 guiones bajos", () => {
 		const key = getSvgKey(BASE_CONFIG);
-		expect((key.match(/_/g) ?? []).length).toBe(3);
+		expect((key.match(/_/g) ?? []).length).toBe(2);
 	});
 
 	it("genera todas las combinaciones posibles sin errores", () => {
-		const sizes = ["s", "m", "l"] as const;
 		const necks = ["redondo", "pico", "alto"] as const;
 		const sleeves = ["anchas", "ajustadas", "rectas"] as const;
 		const fits = ["ajustado", "normal", "oversize"] as const;
 
 		let count = 0;
-		for (const size of sizes) {
-			for (const neck of necks) {
-				for (const sleeve of sleeves) {
-					for (const fit of fits) {
-						const key = getSvgKey({
-							size,
-							neck,
-							sleeves: sleeve,
-							fit,
-						});
-						expect(key).toBeTruthy();
-						expect(key).not.toContain(" ");
-						count++;
-					}
+
+		for (const neck of necks) {
+			for (const sleeve of sleeves) {
+				for (const fit of fits) {
+					const key = getSvgKey({
+						neck,
+						sleeves: sleeve,
+						fit,
+					});
+					expect(key).toBeTruthy();
+					expect(key).not.toContain(" ");
+					count++;
 				}
 			}
 		}
-		expect(count).toBe(81);
+
+		expect(count).toBe(27);
 	});
 });

@@ -295,7 +295,7 @@ export function generateMaterials(config: PatternConfig): Material[] {
 }
 
 export function getSvgKey(
-	config: Pick<PatternConfig, "size" | "neck" | "sleeves" | "fit">,
+	config: Pick<PatternConfig, "neck" | "sleeves" | "fit">,
 ): string {
-	return `${config.size}_${config.neck}_${config.sleeves}_${config.fit}`;
+	return `${config.neck}_${config.sleeves}_${config.fit}`;
 }
