@@ -257,20 +257,6 @@ export function CrearPatronClient({ userId }: Props) {
 									).style.opacity = "0.12";
 								}}
 							/>
-
-							<p
-								className={css({
-									position: "absolute",
-									bottom: "0",
-									right: "0",
-									fontSize: "10px",
-									fontFamily: "dmSans",
-									color: "#AA8880",
-									fontStyle: "italic",
-								})}
-							>
-								{svgKey}.svg
-							</p>
 						</div>
 					</div>
 
