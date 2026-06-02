@@ -215,10 +215,10 @@ export default async function Home() {
 					</div>
 					<div>
 						<Image
-							src="/logo-mobile.svg"
+							src="/video_plataforma.gif"
 							alt="Gift"
-							width={200}
-							height={200}
+							width={400}
+							height={400}
 						/>
 					</div>
 				</div>
