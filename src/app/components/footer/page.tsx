@@ -40,8 +40,12 @@ export default function Footer() {
 						fontWeight: "600",
 					})}
 				>
-					<Link href="/">Contacto</Link>
-					<Link href="/">Github</Link>
+					<Link href="mailto:carladomingomiquel@gmail.com">
+						Contacto
+					</Link>
+					<Link href="https://github.com/Carladomingom/patternly-project.git">
+						Github
+					</Link>
 					<Link href="/">Memoria</Link>
 				</div>
 				<Link
