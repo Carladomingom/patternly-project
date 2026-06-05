@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar contraseña — Patternly</title>
+</head>
+<body style="margin:0;padding:0;background-color:#FAF8F8;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF8F8;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding-bottom:32px;">
+              <span style="font-size:22px;font-weight:600;color:#E03020;font-style:italic;font-family:Georgia,serif;">
+                Patternly
+              </span>
+            </td>
+          </tr>
+
+          <!-- Card -->
+          <tr>
+            <td style="background-color:#FFFFFF;border-radius:16px;border:1px solid #EDE5E3;padding:40px 40px 32px;">
+
+              <!-- Kicker -->
+              <p style="margin:0 0 16px 0;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#E03020;">
+                Seguridad
+              </p>
+
+              <!-- Título -->
+              <h1 style="margin:0 0 12px 0;font-size:28px;font-weight:300;color:#1A0A08;font-family:Georgia,serif;line-height:1.2;">
+                Recupera tu contraseña
+              </h1>
+
+              <!-- Texto -->
+              <p style="margin:0 0 24px 0;font-size:15px;font-weight:300;color:#664438;line-height:1.7;">
+                Hemos recibido una solicitud para restablecer la contraseña de tu cuenta. Pulsa el botón para crear una nueva.
+              </p>
+
+              <!-- Divider -->
+              <div style="height:1px;background-color:#EDE5E3;margin-bottom:24px;"></div>
+
+              <!-- Botón -->
+              <table cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="center">
+                    <a href="{{ .ConfirmationURL }}"
+                      style="display:inline-block;background-color:#E03020;color:#FFFFFF;text-decoration:none;padding:13px 36px;border-radius:8px;font-size:15px;font-weight:500;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+                      Restablecer contraseña
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Aviso caducidad -->
+              <p style="margin:20px 0 0 0;font-size:12px;color:#AA8880;text-align:center;">
+                Este enlace caduca en 24 horas.
+              </p>
+
+              <!-- Enlace alternativo -->
+              <p style="margin:16px 0 0 0;font-size:12px;color:#AA8880;text-align:center;line-height:1.6;">
+                Si el botón no funciona, copia y pega este enlace:<br>
+                <a href="{{ .ConfirmationURL }}" style="color:#E03020;word-break:break-all;">
+                  {{ .ConfirmationURL }}
+                </a>
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding-top:24px;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#AA8880;">
+                Si no has solicitado cambiar tu contraseña, ignora este correo. Tu cuenta está segura.
+              </p>
+              <p style="margin:8px 0 0 0;font-size:11px;color:#AA8880;">
+                © 2026 Patternly · Hecho con amor y lana
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
