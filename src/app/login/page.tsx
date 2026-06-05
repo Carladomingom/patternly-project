@@ -1,8 +1,40 @@
+"use client";
+
 import { css } from "../../../styled-system/css";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
-//className={css({})}
 export default function Login() {
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const router = useRouter();
+	const supabase = createClient();
+
+	async function handleSubmit(e: React.FormEvent) {
+		e.preventDefault();
+		setError(false);
+		setLoading(true);
+
+		const { error } = await supabase.auth.signInWithPassword({
+			email,
+			password,
+		});
+
+		setLoading(false);
+
+		if (error) {
+			setError(true);
+			return;
+		}
+
+		router.push("/");
+		router.refresh();
+	}
+
 	return (
 		<div
 			className={css({
@@ -14,7 +46,8 @@ export default function Login() {
 				margin: "100px",
 			})}
 		>
-			<div
+			<form
+				onSubmit={handleSubmit}
 				className={css({
 					border: "1px solid #F8BDBE",
 					borderRadius: "8px",
@@ -22,7 +55,6 @@ export default function Login() {
 						base: "40px",
 						md: "50px",
 					},
-
 					display: "flex",
 					flexDirection: "column",
 					gap: "4",
@@ -42,6 +74,10 @@ export default function Login() {
 				<input
 					type="email"
 					placeholder="Correo electrónico"
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+					required
+					disabled={loading}
 					className={css({
 						backgroundColor: "#FAF8F8",
 						border: "1px solid #EDE5E3",
@@ -51,21 +87,18 @@ export default function Login() {
 						fontFamily: "dmSans",
 						color: "#1A0A08",
 						outline: "none",
-						width: {
-							base: "300px",
-							md: "500px",
-						},
-						_placeholder: {
-							color: "#AA8880",
-						},
-						_focus: {
-							borderColor: "#E03020",
-						},
+						width: { base: "300px", md: "500px" },
+						_placeholder: { color: "#AA8880" },
+						_focus: { borderColor: "#E03020" },
 					})}
-				></input>
+				/>
 				<input
 					type="password"
 					placeholder="Contraseña"
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+					required
+					disabled={loading}
 					className={css({
 						backgroundColor: "#FAF8F8",
 						border: "1px solid #EDE5E3",
@@ -75,18 +108,11 @@ export default function Login() {
 						fontFamily: "dmSans",
 						color: "#1A0A08",
 						outline: "none",
-						width: {
-							base: "300px",
-							md: "500px",
-						},
-						_placeholder: {
-							color: "#AA8880",
-						},
-						_focus: {
-							borderColor: "#E03020",
-						},
+						width: { base: "300px", md: "500px" },
+						_placeholder: { color: "#AA8880" },
+						_focus: { borderColor: "#E03020" },
 					})}
-				></input>
+				/>
 				<p
 					className={css({
 						fontSize: "8px",
@@ -103,8 +129,6 @@ export default function Login() {
 							fontSize: "8px",
 							color: "#1A0A08",
 							fontWeight: "700",
-							textAlign: "center",
-							width: "100%",
 							fontFamily: "dmSans",
 						})}
 					>
@@ -113,6 +137,8 @@ export default function Login() {
 					</Link>
 				</p>
 				<button
+					type="submit"
+					disabled={loading}
 					className={css({
 						backgroundColor: "#E6322B",
 						padding: "10px 20px",
@@ -122,11 +148,14 @@ export default function Login() {
 						fontSize: "12",
 						border: "none",
 						marginTop: "20px",
+						cursor: "pointer",
+						_disabled: { opacity: "0.6", cursor: "not-allowed" },
 					})}
 				>
-					Acceder
+					{loading ? "Accediendo..." : "Acceder"}
 				</button>
-			</div>
+			</form>
+
 			<p
 				className={css({
 					fontSize: "10px",
@@ -144,34 +173,30 @@ export default function Login() {
 						fontSize: "10px",
 						color: "#1A0A08",
 						fontWeight: "700",
-						textAlign: "center",
-						width: "100%",
 						fontFamily: "dmSans",
-						display: {
-							base: "block",
-							md: "inline",
-						},
+						display: { base: "block", md: "inline" },
 					})}
 				>
 					Regístrate aqui
 				</Link>
 			</p>
-			<div
-				className={css({
-					backgroundColor: "#F8BDBE",
 
-					borderRadius: "8px",
-					padding: "12px 16px",
-					fontSize: "10px",
-					textAlign: "center",
-					fontFamily: "dmSans",
-					color: "#1A0A08",
-					outline: "none",
-					width: "300px",
-				})}
-			>
-				<p>Correo electrónico o contraseña incorrectos</p>
-			</div>
+			{error && (
+				<div
+					className={css({
+						backgroundColor: "#F8BDBE",
+						borderRadius: "8px",
+						padding: "12px 16px",
+						fontSize: "10px",
+						textAlign: "center",
+						fontFamily: "dmSans",
+						color: "#1A0A08",
+						width: "300px",
+					})}
+				>
+					<p>Correo electrónico o contraseña incorrectos</p>
+				</div>
+			)}
 		</div>
 	);
 }
