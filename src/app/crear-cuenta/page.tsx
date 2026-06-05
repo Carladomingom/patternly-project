@@ -34,7 +34,6 @@ export default function CrearCuenta() {
 		});
 		setLoading(true);
 
-		// Comprueba si el username ya existe
 		const { data: existingUser } = await supabase
 			.from("profiles")
 			.select("id")
@@ -47,7 +46,6 @@ export default function CrearCuenta() {
 			return;
 		}
 
-		// Intenta registrar con Supabase Auth
 		const { error } = await supabase.auth.signUp({
 			email,
 			password,
@@ -59,12 +57,11 @@ export default function CrearCuenta() {
 		setLoading(false);
 
 		if (error) {
-			// Email ya registrado
 			if (error.message.toLowerCase().includes("already registered")) {
 				setErrors((prev) => ({ ...prev, emailTaken: true }));
 				return;
 			}
-			// Email con formato inválido (Supabase también lo valida)
+
 			if (error.message.toLowerCase().includes("invalid")) {
 				setErrors((prev) => ({ ...prev, emailInvalid: true }));
 				return;

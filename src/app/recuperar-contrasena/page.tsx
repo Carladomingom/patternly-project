@@ -1,7 +1,27 @@
-import { css } from "../../../styled-system/css";
+"use client";
 
-//className={css({})}
+import { css } from "../../../styled-system/css";
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+
 export default function RecuperarContraseña() {
+	const [email, setEmail] = useState("");
+	const [sent, setSent] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const supabase = createClient();
+
+	async function handleSubmit(e: React.FormEvent) {
+		e.preventDefault();
+		setLoading(true);
+
+		await supabase.auth.resetPasswordForEmail(email, {
+			redirectTo: `${window.location.origin}/actualizar-contrasena`,
+		});
+
+		setLoading(false);
+		setSent(true);
+	}
+
 	return (
 		<div
 			className={css({
@@ -13,15 +33,12 @@ export default function RecuperarContraseña() {
 				margin: "100px",
 			})}
 		>
-			<div
+			<form
+				onSubmit={handleSubmit}
 				className={css({
 					border: "1px solid #F8BDBE",
 					borderRadius: "8px",
-					padding: {
-						base: "40px",
-						md: "50px",
-					},
-
+					padding: { base: "40px", md: "50px" },
 					display: "flex",
 					flexDirection: "column",
 					gap: "4",
@@ -41,6 +58,10 @@ export default function RecuperarContraseña() {
 				<input
 					type="email"
 					placeholder="Correo electrónico"
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+					required
+					disabled={loading || sent}
 					className={css({
 						backgroundColor: "#FAF8F8",
 						border: "1px solid #EDE5E3",
@@ -51,20 +72,15 @@ export default function RecuperarContraseña() {
 						color: "#1A0A08",
 						outline: "none",
 						marginTop: "10px",
-						width: {
-							base: "300px",
-							md: "500px",
-						},
-						_placeholder: {
-							color: "#AA8880",
-						},
-						_focus: {
-							borderColor: "#E03020",
-						},
+						width: { base: "300px", md: "500px" },
+						_placeholder: { color: "#AA8880" },
+						_focus: { borderColor: "#E03020" },
+						_disabled: { opacity: "0.6", cursor: "not-allowed" },
 					})}
-				></input>
-
+				/>
 				<button
+					type="submit"
+					disabled={loading || sent}
 					className={css({
 						backgroundColor: "#E6322B",
 						padding: "10px 20px",
@@ -74,31 +90,35 @@ export default function RecuperarContraseña() {
 						fontSize: "12",
 						border: "none",
 						marginTop: "10px",
+						cursor: "pointer",
+						_disabled: { opacity: "0.6", cursor: "not-allowed" },
 					})}
 				>
-					Enviar
+					{loading ? "Enviando..." : "Enviar"}
 				</button>
-			</div>
+			</form>
 
-			<div
-				className={css({
-					backgroundColor: "#CCE9B9",
-					marginTop: "20px",
-					borderRadius: "8px",
-					padding: "12px 16px",
-					fontSize: "10px",
-					textAlign: "center",
-					fontFamily: "dmSans",
-					color: "#1A0A08",
-					outline: "none",
-					width: "300px",
-				})}
-			>
-				<p>
-					Si tienes una cuenta con nosotras, recibirás un correo
-					electrónico con instrucciones para recuperar tu contraseña.
-				</p>
-			</div>
+			{sent && (
+				<div
+					className={css({
+						backgroundColor: "#CCE9B9",
+						marginTop: "20px",
+						borderRadius: "8px",
+						padding: "12px 16px",
+						fontSize: "10px",
+						textAlign: "center",
+						fontFamily: "dmSans",
+						color: "#1A0A08",
+						width: "300px",
+					})}
+				>
+					<p>
+						Si tienes una cuenta con nosotras, recibirás un correo
+						electrónico con instrucciones para recuperar tu
+						contraseña.
+					</p>
+				</div>
+			)}
 		</div>
 	);
 }
