@@ -1,7 +1,35 @@
+import Link from "next/link";
 import { css } from "../../styled-system/css";
 import Image from "next/image";
-//className={css({})}
-export default function Home() {
+import { createClient } from "@/lib/supabase/server";
+import { PatternCard } from "./components/ui/PatternCard";
+import { NewsletterForm } from "./components/ui/NewsletterForm";
+import type { Pattern } from "@/types";
+
+// Carga los 3 patrones aleatorios en el servidor
+async function getRandomPatterns(): Promise<Pattern[]> {
+	const supabase = await createClient();
+	const { data, error } = await supabase.rpc("get_random_public_patterns", {
+		p_limit: 3,
+	});
+	if (error || !data) return [];
+	return data as Pattern[];
+}
+
+async function getAuthUser() {
+	const supabase = await createClient();
+	const { data } = await supabase.auth.getUser();
+	return data.user;
+}
+
+export default async function Home() {
+	const [patterns, user] = await Promise.all([
+		getRandomPatterns(),
+		getAuthUser(),
+	]);
+
+	const isAuthenticated = !!user;
+
 	return (
 		<div>
 			<section
@@ -50,7 +78,6 @@ export default function Home() {
 							md: "16",
 						},
 						textAlign: "center",
-
 						color: "#684439",
 						maxWidth: {
 							base: "300px",
@@ -67,15 +94,13 @@ export default function Home() {
 					className={css({
 						display: "flex",
 						gap: "4",
-						flexDirection: {
-							base: "row",
-							md: "row",
-						},
+						flexDirection: "row",
 						alignItems: "center",
 						marginTop: "25px",
 					})}
 				>
-					<button
+					<Link
+						href="/crear-patron"
 						className={css({
 							backgroundColor: "#E6322B",
 							padding: "10px 20px",
@@ -84,11 +109,13 @@ export default function Home() {
 							fontFamily: "dmSans",
 							fontSize: "12",
 							border: "none",
+							textDecoration: "none",
 						})}
 					>
 						Crear patrón
-					</button>
-					<button
+					</Link>
+					<Link
+						href="/comunidad"
 						className={css({
 							backgroundColor: "#FFFFFF",
 							padding: "10px 20px",
@@ -97,12 +124,14 @@ export default function Home() {
 							fontFamily: "dmSans",
 							fontSize: "12",
 							border: "1px solid #E6322B",
+							textDecoration: "none",
 						})}
 					>
 						Explorar comunidad
-					</button>
+					</Link>
 				</div>
 			</section>
+
 			<section
 				className={css({
 					width: "100%",
@@ -126,10 +155,7 @@ export default function Home() {
 						padding: "20px",
 						display: "flex",
 						gap: "4",
-						flexDirection: {
-							base: "row",
-							md: "row",
-						},
+						flexDirection: "row",
 						alignItems: "center",
 						justifyContent: "center",
 					})}
@@ -148,7 +174,6 @@ export default function Home() {
 									base: "20",
 									md: "30",
 								},
-
 								width: {
 									base: "200px",
 									md: "300px",
@@ -174,13 +199,12 @@ export default function Home() {
 								miralo{" "}
 							</span>
 							en tiempo real
-						</h2>{" "}
+						</h2>
 						<p
 							className={css({
 								fontFamily: "dmSans",
 								marginTop: "10px",
 								fontWeight: "300",
-
 								fontSize: "12",
 								width: "250px",
 							})}
@@ -300,6 +324,7 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
+
 			<section
 				className={css({
 					padding: "40px",
@@ -308,7 +333,6 @@ export default function Home() {
 					flexDirection: "column",
 					backgroundColor: "#FAF8F8",
 					width: "100%",
-
 					alignItems: "center",
 					justifyContent: "center",
 				})}
@@ -330,8 +354,43 @@ export default function Home() {
 				>
 					Patrones de la Comunidad
 				</h2>
-				{"Aqui iran las cards con los patrones de la comunidad"}
-				<button
+
+				{patterns.length > 0 ? (
+					<div
+						className={css({
+							display: "grid",
+							gridTemplateColumns: {
+								base: "1fr",
+								md: "repeat(3, 1fr)",
+							},
+							gap: "4",
+							width: "100%",
+							maxWidth: "900px",
+						})}
+					>
+						{patterns.map((pattern) => (
+							<PatternCard
+								key={pattern.id}
+								pattern={pattern}
+								isAuthenticated={isAuthenticated}
+							/>
+						))}
+					</div>
+				) : (
+					<p
+						className={css({
+							fontFamily: "dmSans",
+							fontSize: "14px",
+							color: "#AA8880",
+							fontStyle: "italic",
+						})}
+					>
+						Aún no hay patrones en la comunidad.
+					</p>
+				)}
+
+				<Link
+					href="/comunidad"
 					className={css({
 						backgroundColor: "#FFFFFF",
 						padding: "10px 20px",
@@ -342,11 +401,14 @@ export default function Home() {
 						border: "1px solid #EEE5E3",
 						width: "150px",
 						alignSelf: "center",
+						textDecoration: "none",
+						textAlign: "center",
 					})}
 				>
 					Ver más patrones
-				</button>
+				</Link>
 			</section>
+
 			<section>
 				<div
 					className={css({
@@ -415,7 +477,6 @@ export default function Home() {
 							Recibe novedades de crochet
 						</h2>
 
-						{/* Descripción */}
 						<p
 							className={css({
 								fontFamily: "dmSans",
@@ -429,55 +490,7 @@ export default function Home() {
 						</p>
 					</div>
 
-					<div
-						className={css({
-							display: "flex",
-							flexDirection: "column",
-							gap: "2",
-							flex: "1",
-							width: {
-								base: "100%",
-								md: "auto",
-							},
-						})}
-					>
-						<input
-							type="email"
-							placeholder="Introduce tu email"
-							className={css({
-								backgroundColor: "#FAF8F8",
-								border: "1px solid #EDE5E3",
-								borderRadius: "8px",
-								padding: "12px 16px",
-								fontSize: "14px",
-								fontFamily: "dmSans",
-								color: "#1A0A08",
-								outline: "none",
-								width: "100%",
-								_placeholder: {
-									color: "#AA8880",
-								},
-								_focus: {
-									borderColor: "#E03020",
-								},
-							})}
-						/>
-						<button
-							className={css({
-								backgroundColor: "#E03020",
-								color: "#FFFFFF",
-								padding: "12px 24px",
-								borderRadius: "8px",
-								fontSize: "14px",
-								fontWeight: "500",
-								fontFamily: "dmSans",
-								border: "none",
-								width: "100%",
-							})}
-						>
-							Suscribirse
-						</button>
-					</div>
+					<NewsletterForm />
 				</div>
 			</section>
 		</div>
