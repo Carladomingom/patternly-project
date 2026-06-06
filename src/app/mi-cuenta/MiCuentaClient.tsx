@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { css } from "../../../styled-system/css";
 import { createClient } from "@/lib/supabase/client";
+import { NewsletterForm } from "@/app/components/ui/NewsletterForm";
 import type { Pattern, Material, Step } from "@/types";
 
 type Tab = "mis-patrones" | "favoritos" | "ajustes";
@@ -1183,6 +1184,23 @@ export function MiCuentaClient({
 										: "Cambiar contraseña"}
 								</button>
 							</div>
+						</div>
+
+						<div className={sectionCard}>
+							<h2 className={sectionTitle}>Newsletter</h2>
+							<p
+								className={css({
+									fontSize: "13px",
+									fontFamily: "dmSans",
+									fontWeight: "300",
+									color: "#664438",
+									lineHeight: "1.6",
+								})}
+							>
+								Recibe patrones nuevos, tutoriales y novedades
+								de crochet directamente en tu correo. Sin spam.
+							</p>
+							<NewsletterForm />
 						</div>
 
 						<div
