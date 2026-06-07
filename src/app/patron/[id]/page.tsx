@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { css } from "../../../styled-system/css";
+import { css } from "../../../../styled-system/css";
 import { PatronClient } from "./PatronClient";
 import type { Pattern } from "@/types";
 
