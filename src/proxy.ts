@@ -1,10 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Rutas que requieren sesión activa
 const PROTECTED_ROUTES = ["/crear-patron", "/mi-cuenta", "/patron"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 	let supabaseResponse = NextResponse.next({ request });
 
 	const supabase = createServerClient(
@@ -28,14 +27,12 @@ export async function middleware(request: NextRequest) {
 		},
 	);
 
-	// Refresca la sesión (importante para que no expire)
 	const {
 		data: { user },
 	} = await supabase.auth.getUser();
 
 	const pathname = request.nextUrl.pathname;
 
-	// Redirige a login si intenta acceder a ruta protegida sin sesión
 	const isProtected = PROTECTED_ROUTES.some((route) =>
 		pathname.startsWith(route),
 	);
@@ -47,7 +44,6 @@ export async function middleware(request: NextRequest) {
 		return NextResponse.redirect(loginUrl);
 	}
 
-	// Si ya está logada y va a login/registro, redirige a home
 	const isAuthRoute = [
 		"/login",
 		"/registro",
