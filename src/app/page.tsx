@@ -155,7 +155,7 @@ export default async function Home() {
 						padding: "20px",
 						display: "flex",
 						gap: "4",
-						flexDirection: "row",
+						flexDirection: { md: "row", base: "column" },
 						alignItems: "center",
 						justifyContent: "center",
 					})}
@@ -164,6 +164,9 @@ export default async function Home() {
 						className={css({
 							width: {
 								base: "400px",
+							},
+							padding: {
+								base: "30px",
 							},
 						})}
 					>
