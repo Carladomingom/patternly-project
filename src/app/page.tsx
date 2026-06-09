@@ -6,16 +6,18 @@ import { PatternCard } from "./components/ui/PatternCard";
 import { NewsletterForm } from "./components/ui/NewsletterForm";
 import type { Pattern } from "@/types";
 
-// Carga los 3 patrones aleatorios en el servidor
-async function getRandomPatterns(): Promise<Pattern[]> {
+async function getRandomPatterns() {
 	const supabase = await createClient();
-	const { data, error } = await supabase.rpc("get_random_public_patterns", {
-		p_limit: 3,
-	});
-	if (error || !data) return [];
-	return data as Pattern[];
-}
+	const { data, error } = await supabase
+		.from("patterns")
+		.select("*, profiles(username)")
+		.eq("is_public", true)
+		.limit(3)
+		.order("created_at", { ascending: false });
 
+	if (error || !data) return [];
+	return data as (Pattern & { profiles: { username: string } })[];
+}
 async function getAuthUser() {
 	const supabase = await createClient();
 	const { data } = await supabase.auth.getUser();
