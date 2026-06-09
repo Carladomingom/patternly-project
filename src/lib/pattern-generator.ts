@@ -40,9 +40,9 @@ const SLEEVE_FACTOR: Record<string, number> = {
 };
 
 const STITCH_NAME: Record<string, string> = {
-	punto_bajo: "punto bajo (pb)",
-	punto_alto: "punto alto (pa)",
-	relieve: "punto relieve (pr)",
+	punto_bajo: "punto bajo",
+	punto_alto: "punto alto",
+	relieve: "punto relieve",
 };
 
 const STITCH_ROW_HEIGHT: Record<string, number> = {
@@ -72,10 +72,10 @@ export function generateSteps(config: PatternConfig): Step[] {
 	const slFactor = SLEEVE_FACTOR[config.sleeves];
 
 	const chestPts = even(pts(meas.chest * (1 + ease), tension));
-	const halfPts = chestPts / 2; // puntos para pieza delantera o trasera
+	const halfPts = chestPts / 2;
 
 	const bodyRows = rows(meas.body, rowH);
-	const yoke = Math.round(bodyRows * 0.2); // canesú ~20% del largo
+	const yoke = Math.round(bodyRows * 0.2);
 	const torsoRows = bodyRows - yoke;
 
 	const neckPts: Record<string, number> = {
@@ -88,113 +88,108 @@ export function generateSteps(config: PatternConfig): Step[] {
 
 	const armholePts = even(pts(20, tension));
 	const sisaPts = Math.round(armholePts / 2);
-
 	const sleeveCirc = even(pts(meas.sleeveCirc * slFactor, tension));
 	const cuffPts =
 		config.sleeves === "ajustadas" ? even(pts(22, tension)) : sleeveCirc;
 	const sleeveRows = rows(meas.sleeve, rowH);
 	const wristRows = rows(4, rowH);
 	const sleeveBodyRows = sleeveRows - wristRows;
-
 	const sleeveDecTotal = Math.max(0, Math.round((sleeveCirc - cuffPts) / 2));
 	const sleeveDecEvery =
 		config.sleeves === "ajustadas" && sleeveDecTotal > 0
 			? Math.floor(sleeveBodyRows / sleeveDecTotal)
 			: 0;
 
+	const sizeLabel = config.size.toUpperCase();
 	const steps: Step[] = [];
 	let order = 1;
 
 	steps.push({
 		order: order++,
 		description:
-			`MUESTRA DE TENSIÓN: Antes de empezar teje un cuadrado de muestra de 10x10 cm ` +
-			`con ${stitch} y el ganchillo de ${HOOK[config.yarn_weight]}. ` +
-			`Deberías obtener ${tension} puntos y ${Math.round(10 / rowH)} vueltas en 10 cm. ` +
-			`Si tienes más puntos, sube el número del ganchillo. Si tienes menos, bájalo. ` +
-			`Ajusta hasta conseguir la tensión correcta antes de empezar el jersey.`,
+			`antes de empezar haz una muestra de 10x10 cm con ${stitch} ` +
+			`y el ganchillo de ${HOOK[config.yarn_weight]}, tienes que tener ${tension} puntos y ${Math.round(10 / rowH)} vueltas ` +
+			`en esos 10cm. si tienes mas puntos coge un ganchillo mas grande ` +
+			`y si tienes menos uno mas pequeño. es importante hacerlo sino ` +
+			`luego no te van a salir las medidas bien`,
 	});
 
 	steps.push({
 		order: order++,
 		description:
-			`PIEZA TRASERA — CADENA BASE: ` +
-			`Haz una cadena de ${halfPts + 1} puntos (${halfPts} puntos de base + 1 punto de vuelta). ` +
-			`Esta cadena corresponde a la mitad del contorno del pecho (${Math.round((meas.chest * (1 + ease)) / 2)} cm). ` +
-			`Comprueba que la cadena no esté torcida antes de continuar.`,
+			`empezamos por la parte de atras. haz una cadena de ${halfPts + 1} puntos, ` +
+			`que son ${halfPts} puntos normales mas 1 punto de vuelta. ` +
+			`la cadena tiene que medir mas o menos ${Math.round((meas.chest * (1 + ease)) / 2)} cm, ` +
+			`que es la mitad del pecho para la talla ${sizeLabel}. ` +
+			`antes de seguir estirala y midela para asegurarte`,
 	});
 
 	steps.push({
 		order: order++,
 		description:
-			`PIEZA TRASERA — CUERPO: ` +
-			`Trabaja en ${stitch} ida y vuelta durante ${torsoRows} vueltas (${Math.round(torsoRows * rowH)} cm). ` +
-			`Cada vuelta tendrá ${halfPts} puntos. ` +
+			`teje el cuerpo en ${stitch} yendo y viniendo, vuelta a vuelta. ` +
+			`tienes que hacer ${torsoRows} vueltas en total, que son unos ${Math.round(torsoRows * rowH)} cm. ` +
+			`cada vuelta tiene que tener ${halfPts} puntos, ve contando de vez en cuando para no perderte. ` +
 			`${
 				config.fit === "oversize"
-					? `En la vuelta 3 y cada 6 vueltas después, aumenta 1 punto a cada lado (total ${Math.round(torsoRows / 6)} aumentos por lado) para dar más amplitud al cuerpo.`
+					? `como es oversize, en la vuelta 3 y luego cada 6 vueltas aumenta 1 punto a cada lado, esto le da ese aire suelto`
 					: config.fit === "ajustado"
-						? `Mantén los ${halfPts} puntos constantes en todas las vueltas sin aumentos ni disminuciones.`
-						: `Mantén los ${halfPts} puntos constantes en todas las vueltas.`
-			} ` +
-			`Usa marcadores de puntos al principio y al final de cada vuelta para no perder la cuenta.`,
-	});
-
-	steps.push({
-		order: order++,
-		description:
-			`PIEZA TRASERA — SISA: ` +
-			`Una vez alcanzadas ${torsoRows} vueltas, forma la sisa cerrando ${sisaPts} puntos a cada lado. ` +
-			`Vuelta ${torsoRows + 1}: une con punto deslizado los primeros ${sisaPts} puntos, ` +
-			`trabaja en ${stitch} hasta dejar los últimos ${sisaPts} puntos sin tejer. ` +
-			`Te quedan ${halfPts - armholePts} puntos activos. ` +
-			`Continúa durante ${yoke} vueltas más (${Math.round(yoke * rowH)} cm) para el canesú trasero. ` +
-			`Cierra todos los puntos con punto deslizado y remata.`,
-	});
-
-	steps.push({
-		order: order++,
-		description:
-			`PIEZA DELANTERA: ` +
-			`Repite los pasos 2, 3 y 4 exactamente igual para la pieza delantera ` +
-			`(${halfPts} puntos de base, ${torsoRows} vueltas de cuerpo, sisa de ${sisaPts} puntos a cada lado). ` +
-			`${
-				config.neck === "pico"
-					? `Al llegar a la vuelta ${torsoRows + Math.round(yoke * 0.4)} ` +
-						`del canesú, divide el trabajo en dos mitades iguales de ${Math.round((halfPts - armholePts) / 2)} puntos. ` +
-						`En cada mitad disminuye 1 punto en el centro cada vuelta hasta el hombro para formar el cuello en pico.`
-					: config.neck === "redondo"
-						? `Al llegar a la vuelta ${torsoRows + Math.round(yoke * 0.5)} ` +
-							`del canesú, cierra los ${neckP} puntos centrales para el escote redondo. ` +
-							`Trabaja cada hombro por separado durante ${Math.round(yoke * 0.5)} vueltas más y cierra.`
-						: `Trabaja el canesú completo igual que la parte trasera. ` +
-							`El cuello alto se añadirá al unir las piezas.`
+						? `como es ajustado no hagas ningun aumento ni disminucion, mantén los ${halfPts} puntos en todas las vueltas`
+						: `teje recto sin cambiar el numero de puntos en ninguna vuelta`
 			}`,
 	});
 
 	steps.push({
 		order: order++,
 		description:
-			`UNIÓN DE HOMBROS: ` +
-			`Coloca la pieza delantera y trasera con el derecho hacia adentro. ` +
-			`Une los hombros con punto deslizado o costura invisible. ` +
-			`Cada hombro tiene ${Math.round((halfPts - armholePts - neckP) / 2)} puntos. ` +
-			`Tira los hilos sobrantes hacia adentro con la aguja lanera.`,
+			`cuando termines las ${torsoRows} vueltas hay que hacer las sisas para las mangas. ` +
+			`al principio de la siguiente vuelta une con punto deslizado los primeros ${sisaPts} puntos ` +
+			`y al final deja sin tejer los ultimos ${sisaPts} puntos tambien. ` +
+			`te quedan ${halfPts - armholePts} puntos para seguir. ` +
+			`haz otras ${yoke} vueltas mas, que son unos ${Math.round(yoke * rowH)} cm, y cierra todos los puntos. ` +
+			`la parte de atras ya esta lista!`,
+	});
+
+	steps.push({
+		order: order++,
+		description:
+			`la parte de delante se hace igual que la de atras hasta llegar a las sisas, ` +
+			`misma cadena de ${halfPts} puntos, mismas ${torsoRows} vueltas y mismas sisas de ${sisaPts} puntos a cada lado. ` +
+			`${
+				config.neck === "pico"
+					? `para el cuello en pico, cuando llegues a la vuelta ${torsoRows + Math.round(yoke * 0.4)} del canesu ` +
+						`divide el trabajo en dos mitades de ${Math.round((halfPts - armholePts) / 2)} puntos cada una ` +
+						`y en cada mitad quita 1 punto en el centro cada vuelta hasta llegar al hombro`
+					: config.neck === "redondo"
+						? `para el cuello redondo, en la vuelta ${torsoRows + Math.round(yoke * 0.5)} del canesu ` +
+							`cierra los ${neckP} puntos del centro y luego trabaja cada hombro por separado ` +
+							`durante ${Math.round(yoke * 0.5)} vueltas mas y cierralos`
+						: `el canesu delantero se hace igual que el de atras, el cuello alto lo añadimos luego al unir las piezas`
+			}`,
+	});
+
+	steps.push({
+		order: order++,
+		description:
+			`pon la parte de delante y la de atras juntas con el lado bueno hacia adentro ` +
+			`y une los hombros con punto deslizado o con costura si quieres que quede mas limpio. ` +
+			`cada hombro tiene ${Math.round((halfPts - armholePts - neckP) / 2)} puntos. ` +
+			`cuando esten unidos esconde bien los hilos por el reves con la aguja de lana, ` +
+			`minimo 5 cm en zigzag para que no se suelten`,
 	});
 
 	if (config.neck === "redondo" || config.neck === "alto") {
 		steps.push({
 			order: order++,
 			description:
-				`CUELLO: ` +
-				`Con el jersey unido en los hombros, recoge los puntos alrededor del escote. ` +
-				`Deberías tener aproximadamente ${neckP} puntos. ` +
+				`para el cuello, con el jersey ya unido por los hombros, ` +
+				`recoge los puntos alrededor del escote, tienen que salirte unos ${neckP} puntos. ` +
 				`${
 					config.neck === "alto"
-						? `Teje en redondo en ${stitch} durante ${neckRows} vueltas (8 cm) para el cuello alto. ` +
-							`Cierra con punto deslizado y remata dejando 20 cm de hilo.`
-						: `Teje 2 vueltas en punto bajo para el ribete del cuello redondo. ` +
-							`Cierra con punto deslizado y remata.`
+						? `como es cuello alto teje en redondo con ${stitch} durante ${neckRows} vueltas que son unos 8 cm, ` +
+							`cierra con punto deslizado y deja un cabo de unos 20 cm para rematar`
+						: `para el cuello redondo solo necesitas 2 vueltas de punto bajo alrededor del escote para rematarlo, ` +
+							`cierra con punto deslizado y esconde el hilo`
 				}`,
 		});
 	}
@@ -202,51 +197,45 @@ export function generateSteps(config: PatternConfig): Step[] {
 	steps.push({
 		order: order++,
 		description:
-			`MANGA (repite para las dos): ` +
-			`Recoge ${sleeveCirc} puntos alrededor de la sisa con el derecho hacia fuera. ` +
-			`Coloca un marcador al inicio de la vuelta. ` +
-			`Teje en redondo en ${stitch}. ` +
+			`las mangas se hacen igual las dos, hazlas seguidas para que no te queden diferentes. ` +
+			`recoge ${sleeveCirc} puntos alrededor de la sisa con el lado bueno hacia fuera y pon un marcador al inicio. ` +
+			`teje en redondo con ${stitch}. ` +
 			`${
 				config.sleeves === "ajustadas" && sleeveDecTotal > 0
-					? `Para hacer la manga ajustada, disminuye 1 punto a cada lado cada ${sleeveDecEvery} vueltas. ` +
-						`Repite estas disminuciones ${sleeveDecTotal} veces hasta tener ${cuffPts} puntos (${sleeveBodyRows} vueltas en total, ${Math.round(sleeveBodyRows * rowH)} cm).`
+					? `para que queden ajustadas cada ${sleeveDecEvery} vueltas quita 1 punto a cada lado, ` +
+						`repite esto ${sleeveDecTotal} veces en total y al final tendras ${cuffPts} puntos. ` +
+						`en total son ${sleeveBodyRows} vueltas hasta el puno, unos ${Math.round(sleeveBodyRows * rowH)} cm`
 					: config.sleeves === "anchas"
-						? `Mantén los ${sleeveCirc} puntos constantes durante ${sleeveBodyRows} vueltas (${Math.round(sleeveBodyRows * rowH)} cm) para la manga ancha.`
-						: `Mantén los ${sleeveCirc} puntos constantes durante ${sleeveBodyRows} vueltas (${Math.round(sleeveBodyRows * rowH)} cm).`
+						? `como son anchas teje recto sin quitar ni añadir puntos durante ${sleeveBodyRows} vueltas, unos ${Math.round(sleeveBodyRows * rowH)} cm`
+						: `teje recto durante ${sleeveBodyRows} vueltas, unos ${Math.round(sleeveBodyRows * rowH)} cm`
 			}`,
 	});
 
 	steps.push({
 		order: order++,
 		description:
-			`PUÑO DE MANGA: ` +
-			`Con ${cuffPts} puntos activos al final de la manga, ` +
-			`teje ${wristRows} vueltas en punto bajo para el puño (${Math.round(wristRows * 0.5)} cm). ` +
-			`Cierra todos los puntos con punto deslizado y remata dejando 15 cm de hilo. ` +
-			`Repite con la otra manga.`,
+			`para el puno haz ${wristRows} vueltas de punto bajo, son unos ${Math.round(wristRows * 0.5)} cm. ` +
+			`cierra con punto deslizado y deja unos 15 cm de hilo para esconder. ` +
+			`repite lo mismo con la otra manga`,
 	});
 
 	steps.push({
 		order: order++,
 		description:
-			`RIBETE INFERIOR DEL CUERPO: ` +
-			`Una las costados del jersey (delantera + trasera) con punto deslizado o costura invisible, ` +
-			`dejando abierta la sisa donde ya están unidas las mangas. ` +
-			`Recoge los ${chestPts} puntos de la cadena base a lo largo del bajo del jersey. ` +
-			`Teje 3 vueltas en punto bajo para el ribete inferior. ` +
-			`Cierra con punto deslizado.`,
+			`une los costados del jersey cosiendo la parte de delante con la de atras ` +
+			`desde abajo hasta la sisa. despues recoge los ${chestPts} puntos de la cadena base ` +
+			`a lo largo de todo el bajo del jersey y haz 3 vueltas de punto bajo para el ribete. ` +
+			`cierra con punto deslizado, esto hace que el bajo no se enrolle`,
 	});
 
 	steps.push({
 		order: order++,
 		description:
-			`ACABADO FINAL: ` +
-			`Esconde todos los hilos sueltos por el revés con la aguja lanera haciendo un recorrido en zigzag ` +
-			`de al menos 5 cm para que no se suelten al lavar. ` +
-			`Moja el jersey con agua fría, escúrrelo sin retorcer y estíralo sobre una superficie plana ` +
-			`hasta las medidas deseadas (pecho: ${Math.round(meas.chest * (1 + ease))} cm, largo: ${meas.body} cm). ` +
-			`Sujeta con alfileres de bloqueo si tienes y deja secar completamente. ` +
-			`¡Tu jersey de ${config.size.toUpperCase()} está listo!`,
+			`esconde todos los hilos que queden sueltos por el reves pasandolos en zigzag con la aguja de lana. ` +
+			`para terminar moja el jersey con agua fria, escurrelo sin estrujarlo ` +
+			`y estiralo sobre una superficie plana hasta que mida ${Math.round(meas.chest * (1 + ease))} cm de contorno ` +
+			`y ${meas.body} cm de largo. dejalo secar del todo antes de usarlo. ` +
+			`ya tienes tu jersey talla ${sizeLabel} listo!`,
 	});
 
 	return steps;
@@ -254,7 +243,6 @@ export function generateSteps(config: PatternConfig): Step[] {
 
 export function generateMaterials(config: PatternConfig): Material[] {
 	const grams = YARN_GRAMS[config.yarn_weight]?.[config.size] ?? 600;
-
 	return [
 		{
 			name: "Hilo",
@@ -271,26 +259,14 @@ export function generateMaterials(config: PatternConfig): Material[] {
 			quantity: 1,
 			unit: "unidad (para rematar hilos)",
 		},
-		{
-			name: "Marcadores de puntos",
-			quantity: 6,
-			unit: "unidades",
-		},
+		{ name: "Marcadores de puntos", quantity: 6, unit: "unidades" },
 		{
 			name: "Alfileres de bloqueo",
 			quantity: 20,
 			unit: "unidades (para el acabado)",
 		},
-		{
-			name: "Tijeras",
-			quantity: 1,
-			unit: "unidad",
-		},
-		{
-			name: "Cinta métrica",
-			quantity: 1,
-			unit: "unidad",
-		},
+		{ name: "Tijeras", quantity: 1, unit: "unidad" },
+		{ name: "Cinta métrica", quantity: 1, unit: "unidad" },
 	];
 }
 
