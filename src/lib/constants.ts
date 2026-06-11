@@ -36,8 +36,6 @@ export const FIT_OPTIONS: { value: Fit; label: string }[] = [
 	{ value: "oversize", label: "Oversize" },
 ];
 
-//Opciones de filtro para la página de patrones
-
 export const FILTER_FIT_OPTIONS = [
 	{ value: "todos", label: "Todos" },
 	{ value: "ajustado", label: "Ajustado" },
@@ -65,8 +63,6 @@ export const SORT_OPTIONS = [
 ] as const;
 
 export const PATTERNS_PER_PAGE = 9;
-
-// Tamaños de ganchillo recomendados según el grosor del hilo
 
 export const FIT_PILL_STYLE: Record<string, { bg: string; color: string }> = {
 	ajustado: { bg: "#FDECEA", color: "#E03020" },

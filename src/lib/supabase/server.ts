@@ -17,10 +17,7 @@ export async function createClient() {
 						cookiesToSet.forEach(({ name, value, options }) => {
 							cookieStore.set(name, value, options);
 						});
-					} catch {
-						// En Server Components no se puede setear cookies,
-						// el middleware se encarga de refrescar la sesión
-					}
+					} catch {}
 				},
 			},
 		},
