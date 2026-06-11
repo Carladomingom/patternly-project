@@ -43,9 +43,7 @@ export default function Footer() {
 					<Link href="mailto:carladomingomiquel@gmail.com">
 						Contacto
 					</Link>
-					<Link href="https://github.com/Carladomingom/patternly-project.git">
-						Github
-					</Link>
+
 					<Link href="/">Memoria</Link>
 				</div>
 				<Link

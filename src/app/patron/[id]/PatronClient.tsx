@@ -29,7 +29,7 @@ const VALUE = css({
 	color: "#1A0A08",
 });
 
-export function PatronClient({ pattern, initialLiked, isOwner }: Props) {
+export function PatronClient({ pattern, initialLiked }: Props) {
 	const [liked, setLiked] = useState(initialLiked);
 	const [count, setCount] = useState(pattern.likes_count);
 	const [downloading, setDownloading] = useState(false);

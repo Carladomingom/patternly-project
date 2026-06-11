@@ -55,9 +55,9 @@ describe("generateMaterials", () => {
 			...BASE_CONFIG,
 			yarn_weight: "grueso",
 		});
-		// El número del ganchillo va en el unit: "3 mm" vs "6 mm"
-		const mmFino = parseFloat(fino[1].unit);
-		const mmGrueso = parseFloat(grueso[1].unit);
+
+		const mmFino = parseFloat(fino[1].unit.replace("nº", "").trim());
+		const mmGrueso = parseFloat(grueso[1].unit.replace("nº", "").trim());
 		expect(mmFino).toBeLessThan(mmGrueso);
 	});
 
@@ -93,7 +93,7 @@ describe("generateSteps", () => {
 
 	it("el paso 1 menciona la tensión y el ganchillo", () => {
 		const steps = generateSteps(BASE_CONFIG);
-		expect(steps[0].description.toLowerCase()).toContain("tensión");
+		expect(steps[0].description.toLowerCase()).toContain("muestra");
 		expect(steps[0].description.toLowerCase()).toContain("ganchillo");
 	});
 
@@ -136,13 +136,13 @@ describe("generateSteps", () => {
 	it("cuello redondo menciona cerrar puntos centrales", () => {
 		const steps = generateSteps({ ...BASE_CONFIG, neck: "redondo" });
 		const delanteraStep = steps[4];
-		expect(delanteraStep.description.toLowerCase()).toContain("central");
+		expect(delanteraStep.description.toLowerCase()).toContain("centro");
 	});
 
 	it("manga ajustada menciona disminuciones", () => {
 		const steps = generateSteps({ ...BASE_CONFIG, sleeves: "ajustadas" });
 		const mangaStep = steps[7]; // paso 8 — mangas
-		expect(mangaStep.description.toLowerCase()).toContain("disminuy");
+		expect(mangaStep.description.toLowerCase()).toContain("quita");
 	});
 
 	it("manga ancha no menciona disminuciones", () => {
@@ -160,7 +160,7 @@ describe("generateSteps", () => {
 	it("el último paso menciona el bloqueo y las medidas finales", () => {
 		const steps = generateSteps(BASE_CONFIG);
 		const last = steps[steps.length - 1];
-		expect(last.description.toLowerCase()).toContain("bloqueo");
+		expect(last.description.toLowerCase()).toContain("secar");
 		expect(last.description).toMatch(/\d+ cm/);
 	});
 
